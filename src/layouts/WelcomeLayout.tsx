@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import { useRef, useState } from "react";
 import { Link, useLocation, useOutlet } from "react-router-dom";
 import logo from "../assets/images/logo.svg";
-const linkMap = {
+const linkMap: Record<string, string> = {
   "/welcome/1": "/welcome/2",
   "/welcome/2": "/welcome/3",
   "/welcome/3": "/welcome/4",
@@ -14,7 +14,7 @@ export const WelcomeLayout: React.FC = () => {
   const location = useLocation();
   const outlet = useOutlet();
   map.current[location.pathname] = outlet;
-  const [extraStyle, setExtraStyle] = useState({ position: "relative" });
+  const [extraStyle, setExtraStyle] = useState<{position: "relative" | "absolute"}>({ position: "relative" });
   const transitions = useTransition(location.pathname, {
     from: {
       transform:
@@ -42,18 +42,20 @@ export const WelcomeLayout: React.FC = () => {
       </header>
       <main shrink-1 grow-1 relative>
         {transitions((style, pathname) => (
-          <animated.div
-            key={pathname}
-            style={{ ...style, ...extraStyle }}
-            w="100%"
-            h="100%"
-            p-16px
-            flex
-          >
-            <div grow-1 bg-white flex justify-center items-center rounded-8px>
-              {map.current[pathname]}
-            </div>
-          </animated.div>
+          <div style={extraStyle}>
+            <animated.div
+              key={pathname}
+              style={style}
+              w="100%"
+              h="100%"
+              p-16px
+              flex
+            >
+              <div grow-1 bg-white flex justify-center items-center rounded-8px>
+                {map.current[pathname]}
+              </div>
+            </animated.div>
+          </div>
         ))}
       </main>
       <footer
