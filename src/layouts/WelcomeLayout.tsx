@@ -1,8 +1,9 @@
 import { animated, useTransition } from "@react-spring/web";
-import type { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import { useRef, useState } from "react";
-import { Link, useLocation, useOutlet } from "react-router-dom";
+import { Link, useLocation, useNavigate, useOutlet } from "react-router-dom";
 import logo from "../assets/images/logo.svg";
+import { useSwipe } from "../hooks/useSwipe";
 const linkMap: Record<string, string> = {
   "/welcome/1": "/welcome/2",
   "/welcome/2": "/welcome/3",
@@ -12,7 +13,11 @@ const linkMap: Record<string, string> = {
 export const WelcomeLayout: React.FC = () => {
   const map = useRef<Record<string, ReactNode>>({});
   const location = useLocation();
+  const nav = useNavigate();
+  const animating = useRef(false)
   const outlet = useOutlet();
+  const main = useRef<HTMLElement>(null)
+  const {direction} = useSwipe(main)
   map.current[location.pathname] = outlet;
   const [extraStyle, setExtraStyle] = useState<{position: "relative" | "absolute"}>({ position: "relative" });
   const transitions = useTransition(location.pathname, {
@@ -29,9 +34,17 @@ export const WelcomeLayout: React.FC = () => {
       setExtraStyle({ position: "absolute" });
     },
     onRest: () => {
+      animating.current = false
       setExtraStyle({ position: "relative" });
     },
   });
+  useEffect(()=>{
+    if(direction === 'left'){
+      if(animating.current){return}
+      animating.current = true;
+      nav(linkMap[location.pathname])
+    }
+  },[direction,linkMap,location.pathname])
   return (
     <div className="bg-#5f34bf" h-screen flex flex-col items-stretch pb-16px>
       <header shrink-0 text-center pt-64px>
@@ -40,7 +53,7 @@ export const WelcomeLayout: React.FC = () => {
           山竹记账
         </h1>
       </header>
-      <main shrink-1 grow-1 relative>
+      <main shrink-1 grow-1 relative ref={main}>
         {transitions((style, pathname) => (
             <animated.div
               key={pathname}
