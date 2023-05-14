@@ -38,6 +38,9 @@ export const WelcomeLayout: React.FC = () => {
       setExtraStyle({ position: "relative" });
     },
   });
+  const onSkipWelcome=()=>{
+    localStorage.setItem('hasReadWelcome','yes')
+  }
   useEffect(()=>{
     if(direction === 'left'){
       if(animating.current){return}
@@ -84,7 +87,7 @@ export const WelcomeLayout: React.FC = () => {
         >
           下一页
         </Link>
-        <Link style={{ gridArea: "1 / 3 / 2 / 4" }} to="/welcome/xxx">
+        <Link style={{ gridArea: "1 / 3 / 2 / 4" }} to="/home" onClick={onSkipWelcome}>
           跳过
         </Link>
       </footer>
