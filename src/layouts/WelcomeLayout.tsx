@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { Link, useLocation, useNavigate, useOutlet } from "react-router-dom";
 import logo from "../assets/images/logo.svg";
 import { useSwipe } from "../hooks/useSwipe";
+import { useLocalStore } from "../stores/useLocalStore";
 const linkMap: Record<string, string> = {
   "/welcome/1": "/welcome/2",
   "/welcome/2": "/welcome/3",
@@ -38,8 +39,9 @@ export const WelcomeLayout: React.FC = () => {
       setExtraStyle({ position: "relative" });
     },
   });
+  const {setHasReadWelcome} = useLocalStore();
   const onSkipWelcome=()=>{
-    localStorage.setItem('hasReadWelcome','yes')
+    setHasReadWelcome(true)
   }
   useEffect(()=>{
     if(direction === 'left'){
