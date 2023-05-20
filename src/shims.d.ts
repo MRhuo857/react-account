@@ -8,7 +8,10 @@ declare module 'react' {
     before?: string
     after?: string
     shadow?: boolean
-    w?:string
-    h?:string 
+    w?: string
+    h?: string
+    bg?: string
+    rounded?: string
+    fixed?: boolean
   }
 }
