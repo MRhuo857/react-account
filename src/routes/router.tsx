@@ -38,4 +38,8 @@ export const router = createBrowserRouter([
       },
     ],
   },
+  {
+    path: "items",
+    element:<div>items</div>
+  }
 ]);
